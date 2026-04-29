@@ -1,9 +1,8 @@
 import type { Metadata } from "next";
-import { DsfrProvider } from "@codegouvfr/react-dsfr/next-appdir/DsfrProvider";
-import { getHtmlAttributes } from "@codegouvfr/react-dsfr/next-appdir/getHtmlAttributes";
-import { StartDsfr } from "./StartDsfr";
-import { defaultColorScheme } from "./defaultColorScheme";
 import Link from "next/link";
+import { DsfrProvider, StartDsfrOnHydration } from "@/lib/dsfr/DsfrProvider";
+import { DsfrHead } from "@/lib/dsfr/DsfrHead";
+import { getHtmlAttributes } from "@/lib/dsfr/getHtmlAttributes";
 
 export const metadata: Metadata = {
   title: "Prototype beta.gouv",
@@ -15,9 +14,9 @@ export default function RootLayout({
 }: Readonly<{ children: React.ReactNode }>): React.ReactElement {
   const lang = "fr";
   return (
-    <html {...getHtmlAttributes({ defaultColorScheme, lang })}>
+    <html {...getHtmlAttributes({ lang })}>
       <head>
-        <StartDsfr />
+        <DsfrHead />
       </head>
       <body>
         <DsfrProvider lang={lang}>
@@ -91,6 +90,7 @@ export default function RootLayout({
               </div>
             </div>
           </footer>
+          <StartDsfrOnHydration />
         </DsfrProvider>
       </body>
     </html>

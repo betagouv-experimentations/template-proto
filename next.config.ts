@@ -15,6 +15,16 @@ const nextConfig: NextConfig = {
       bodySizeLimit: "2mb",
     },
   },
+  webpack: (config) => {
+    config.module.rules.push({
+      test: /\.(woff|woff2|ttf|otf|eot)$/i,
+      type: "asset/resource",
+      generator: {
+        filename: "static/media/[hash][ext][query]",
+      },
+    });
+    return config;
+  },
   async headers() {
     return [
       {
