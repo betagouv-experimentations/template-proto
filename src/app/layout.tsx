@@ -1,7 +1,6 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { DsfrProvider, StartDsfrOnHydration } from "@/lib/dsfr/DsfrProvider";
-import { DsfrHead } from "@/lib/dsfr/DsfrHead";
 import { getHtmlAttributes } from "@/lib/dsfr/getHtmlAttributes";
 
 export const metadata: Metadata = {
@@ -16,7 +15,8 @@ export default function RootLayout({
   return (
     <html {...getHtmlAttributes({ lang })}>
       <head>
-        <DsfrHead />
+        <link rel="stylesheet" href="/dsfr/dsfr.min.css" />
+        <link rel="stylesheet" href="/dsfr/utility/icons/icons.min.css" />
       </head>
       <body>
         <DsfrProvider lang={lang}>

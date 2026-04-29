@@ -28,6 +28,9 @@ next-env.d.ts
 *.log
 npm-debug.log*
 
+# DSFR assets copied at build time via scripts/copy-dsfr-assets.sh
+public/dsfr/
+
 # OS
 .DS_Store
 Thumbs.db
