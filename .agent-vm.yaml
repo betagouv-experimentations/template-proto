@@ -1,0 +1,4 @@
+runtime: ./scripts/runtime.sh
+memory: 8GiB
+disk: 30GiB
+cpus: 4
