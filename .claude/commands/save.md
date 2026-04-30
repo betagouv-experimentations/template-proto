@@ -33,14 +33,77 @@ Sauvegarde le travail et déploie en production.
    ```bash
    git push origin main
    ```
+   Récupère le SHA du commit poussé :
+   ```bash
+   SHA=$(git rev-parse HEAD)
+   REPO=$(basename "$(git rev-parse --show-toplevel)")
+   ```
 
-5. **Confirmer** :
+5. **Suivre le déploiement** :
 
-   Affiche au PM :
+   Annonce au PM :
+   ```
+   ✅ Sauvegardé. Le déploiement Coolify a démarré, je surveille...
+   ```
 
-   "✅ Sauvegardé et déployé !
+   Poll le proxy de logs toutes les 10 secondes, max 5 minutes :
+   ```bash
+   curl -sf "https://coolify-logs.proto-beta.fr/logs/$REPO/$SHA"
+   ```
 
-   Ton proto sera en ligne dans ~2 minutes sur :
-   https://[NOM-DU-REPO].experimentations.beta.gouv.fr
+   Selon le `status` retourné :
 
-   (remplace [NOM-DU-REPO] par le vrai nom du repo Git)"
+   - **`queued`** ou **`in_progress`** :
+     Affiche au PM toutes les 30s :
+     `🔄 Build en cours... (déjà <durée>)`
+     Continue à poller.
+
+   - **`finished`** ou **`success`** :
+     Récupère le `commit_url`/domaine depuis `.coolify/app.json` ou
+     reconstruis-le : `https://<repo>.proto-beta.fr`. Affiche :
+     ```
+     ✅ Déployé !
+     → https://<repo>.proto-beta.fr
+     (déploiement en ~<durée>)
+     ```
+     STOP.
+
+   - **`failed`** ou **`error`** :
+     Récupère les logs (champ `logs` de la réponse JSON), analyse les
+     dernières lignes pour identifier la cause. Cas typiques :
+     - Erreur TypeScript → propose un /change pour corriger
+     - Migration Drizzle non appliquée → propose un /change pour
+       régénérer + commit
+     - Manque d'une variable d'env → liste celles attendues vs
+       celles présentes dans Coolify
+     - Hors de tes compétences → affiche au PM :
+
+       ```
+       ❌ Le déploiement a échoué.
+
+       Voici ce que j'ai vu dans les logs :
+       <résumé en 3-5 lignes des dernières erreurs>
+
+       Je n'arrive pas à corriger automatiquement. Demande à ton coach
+       beta d'aller voir : <deployment_url>
+       ```
+     STOP.
+
+   - Si le proxy ne répond pas (timeout, 502) après 3 essais :
+     ```
+     ⚠️ Le push est bien parti mais je n'arrive pas à suivre l'état du
+     déploiement. Vérifie dans 2-3 min sur https://<repo>.proto-beta.fr
+     ```
+     STOP.
+
+## Notes importantes
+
+- Le PM ne sait pas ce qu'est Coolify, deployment_uuid, etc. Reste
+  côté observable : "build", "déploiement", URL finale.
+- Si le polling dure plus de 5 min sans réponse définitive, sors avec
+  un message neutre ("ça met plus de temps que prévu, vérifie bientôt
+  sur https://...") plutôt que de boucler indéfiniment.
+- Le fichier `.coolify/app.json` (créé automatiquement par le workflow
+  bootstrap-coolify.yml au premier push) contient l'`app_uuid`, le
+  `domain`, et le `database_uuid`. Tu peux t'en servir pour confirmer
+  l'URL de déploiement plutôt que de la deviner.
