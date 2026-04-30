@@ -2,6 +2,7 @@
 // Run automatically by the Docker container at startup; can also be
 // invoked manually via `node scripts/migrate.mjs`.
 
+import { existsSync } from "node:fs";
 import { drizzle } from "drizzle-orm/postgres-js";
 import { migrate } from "drizzle-orm/postgres-js/migrator";
 import postgres from "postgres";
@@ -10,6 +11,17 @@ const databaseUrl = process.env.DATABASE_URL;
 if (!databaseUrl) {
   console.error("DATABASE_URL is not set; refusing to run migrations.");
   process.exit(1);
+}
+
+// Skip cleanly when no migrations have been generated yet. drizzle-orm
+// throws "Can't find meta/_journal.json" otherwise, which crashes the
+// container before Next.js can start.
+const journalPath = "./drizzle/meta/_journal.json";
+if (!existsSync(journalPath)) {
+  console.log(
+    `No Drizzle journal at ${journalPath} — no migrations to apply, skipping.`,
+  );
+  process.exit(0);
 }
 
 const sql = postgres(databaseUrl, { max: 1 });
