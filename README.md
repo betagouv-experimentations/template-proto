@@ -40,10 +40,10 @@ Dans un terminal :
 ```bash
 git clone {{REPO_CLONE_URL}}
 cd {{REPO_NAME}}
-agent-vm --memory 8 --disk 30 --cpus 4 claude
+agent-vm --memory 16 --disk 40 --cpus 6 claude
 ```
 
-Les flags `--memory 8 --disk 30 --cpus 4` ne sont nécessaires qu'au **premier lancement** : ils dimensionnent la VM (sinon agent-vm la crée en 2 GB de RAM, ce qui n'est pas suffisant pour ce stack). Les fois suivantes, un simple `agent-vm claude` suffit.
+Les flags `--memory 16 --disk 40 --cpus 6` ne sont nécessaires qu'au **premier lancement** : ils dimensionnent la VM (sinon agent-vm la crée en 2 GB de RAM, ce qui ne suffit pas — Claude + Playwright Chromium + Postgres + Next.js consomment facilement 10-12 GB pendant un build). Les fois suivantes, un simple `agent-vm claude` suffit.
 
 Première fois : agent-vm provisionne sa VM (Node, Playwright, gh CLI, …) et te demande de te connecter à GitHub via le navigateur. Compte 3-5 min.
 
