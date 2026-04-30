@@ -41,6 +41,16 @@ Dans TOUS les cas, suis ces étapes :
    npm run dev
    ```
 
+7. **Smoke test via MCP Playwright** (idem `/build` étape 8) :
+   - Navigue sur `http://localhost:3000` et sur l'écran impacté par
+     le changement
+   - Vérifie status 200, console sans erreur, page rendue
+   - Si l'écran a un formulaire modifié : essaie de le soumettre
+     pour confirmer que la validation marche
+
+   Corrige et itère si nécessaire. Pas de retour au PM tant que le
+   smoke test n'est pas vert.
+
 ## Livrer
 
 Affiche :

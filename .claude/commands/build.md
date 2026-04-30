@@ -67,6 +67,28 @@ Enchaîne SANS interruption :
    npm run dev
    ```
 
+8. **Smoke test** : utilise le MCP Playwright pour vérifier que le
+   serveur répond correctement AVANT de rendre la main au PM :
+
+   - Navigue sur `http://localhost:3000`
+   - Vérifie que la réponse HTTP est 200
+   - Capture les messages console (`browser_console_messages`) — il
+     ne doit pas y avoir d'erreur JS au chargement
+   - Prends un snapshot accessibility (`browser_snapshot`) — vérifie
+     qu'un `<h1>` est présent et que la page n'est pas cassée
+   - Visite **au moins** un écran principal du parcours utilisateur
+     (le plus important du plan), idem : pas d'erreur, page rend.
+
+   Si le smoke test détecte un problème :
+   - Diagnostique (route 404, erreur de serveur, erreur Hydration,
+     bundle qui ne charge pas, etc.)
+   - Corrige
+   - Relance le dev server si besoin
+   - Refais le smoke test
+   - Itère jusqu'à ce que tout passe.
+
+   NE rends PAS la main au PM tant que le smoke test n'est pas vert.
+
 ## Phase 4 — Livrer
 
 Affiche au PM :

@@ -61,6 +61,10 @@ Le PM utilise 4 commandes. Ne le redirige pas vers d'autres outils :
 - En développement, la DB tourne dans Docker (docker-compose.yml)
 - En production, la DB est provisionnée par Coolify (DATABASE_URL
   injectée automatiquement)
+- **En production, les migrations sont appliquées automatiquement au
+  démarrage du container** via `scripts/migrate.mjs`. Tu n'as pas à
+  les déclencher manuellement après un déploiement. Si la migration
+  échoue, le container ne démarre pas et Coolify rapporte l'erreur.
 
 ### Tests
 
