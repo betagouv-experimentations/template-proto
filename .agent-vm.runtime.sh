@@ -1,6 +1,8 @@
 #!/bin/bash
-# scripts/runtime.sh — Provisioning beta.gouv pour agent-vm
-# Exécuté automatiquement par agent-vm au premier lancement
+# .agent-vm.runtime.sh — Provisioning beta.gouv pour agent-vm.
+# Exécuté automatiquement par agent-vm à la création de la VM,
+# avant le démarrage de Claude. Voir
+# https://github.com/sylvinus/agent-vm.
 
 set -euo pipefail
 
