@@ -6,7 +6,9 @@ name: bootstrap-coolify
 #
 # Required GitHub org secrets (Settings → Secrets → Actions):
 #   COOLIFY_BASE_URL          e.g. https://coolify.proto-beta.fr
-#   COOLIFY_TOKEN             write-scoped Coolify API token
+#   COOLIFY_TOKEN_WRITE       write-scoped Coolify API token
+#                             (a separate read-scoped token lives only
+#                             inside coolify-logs-proxy)
 #   COOLIFY_PROJECT_UUID      uuid of the "protos" project
 #   COOLIFY_SERVER_UUID       uuid of the "localhost" server
 #   COOLIFY_GITHUB_APP_UUID   uuid of the connected GitHub App source
@@ -51,7 +53,7 @@ jobs:
         id: db
         env:
           BASE: ${{ secrets.COOLIFY_BASE_URL }}
-          TOKEN: ${{ secrets.COOLIFY_TOKEN }}
+          TOKEN: ${{ secrets.COOLIFY_TOKEN_WRITE }}
         run: |
           set -e
           RES=$(curl -fsS -X POST \
@@ -77,7 +79,7 @@ jobs:
         if: steps.gate.outputs.skip != 'true'
         env:
           BASE: ${{ secrets.COOLIFY_BASE_URL }}
-          TOKEN: ${{ secrets.COOLIFY_TOKEN }}
+          TOKEN: ${{ secrets.COOLIFY_TOKEN_WRITE }}
           DB_UUID: ${{ steps.db.outputs.db_uuid }}
         run: |
           curl -fsS -X POST -H "Authorization: Bearer $TOKEN" \
@@ -90,7 +92,7 @@ jobs:
         id: dburl
         env:
           BASE: ${{ secrets.COOLIFY_BASE_URL }}
-          TOKEN: ${{ secrets.COOLIFY_TOKEN }}
+          TOKEN: ${{ secrets.COOLIFY_TOKEN_WRITE }}
           DB_UUID: ${{ steps.db.outputs.db_uuid }}
         run: |
           set -e
@@ -117,7 +119,7 @@ jobs:
         id: app
         env:
           BASE: ${{ secrets.COOLIFY_BASE_URL }}
-          TOKEN: ${{ secrets.COOLIFY_TOKEN }}
+          TOKEN: ${{ secrets.COOLIFY_TOKEN_WRITE }}
         run: |
           set -e
           RES=$(curl -fsS -X POST \
@@ -147,7 +149,7 @@ jobs:
         if: steps.gate.outputs.skip != 'true'
         env:
           BASE: ${{ secrets.COOLIFY_BASE_URL }}
-          TOKEN: ${{ secrets.COOLIFY_TOKEN }}
+          TOKEN: ${{ secrets.COOLIFY_TOKEN_WRITE }}
           APP_UUID: ${{ steps.app.outputs.app_uuid }}
           DB_URL: ${{ steps.dburl.outputs.url }}
         run: |
