@@ -143,12 +143,15 @@ jobs:
               \"is_preview\": false
             }"
 
-      - name: Persist .coolify/app.json + push (triggers first deploy)
+      - name: Personalize README + persist .coolify/app.json + push
         if: steps.gate.outputs.skip != 'true'
         env:
           APP_UUID: ${{ steps.app.outputs.app_uuid }}
           DB_UUID: ${{ steps.db.outputs.db_uuid }}
           DOMAIN: ${{ steps.meta.outputs.domain }}
+          REPO_NAME: ${{ steps.meta.outputs.repo_name }}
+          REPO_FULL_NAME: ${{ github.repository }}
+          REPO_CLONE_URL: https://github.com/${{ github.repository }}.git
         run: |
           mkdir -p .coolify
           cat > .coolify/app.json <<EOF
@@ -159,8 +162,19 @@ jobs:
             "bootstrap_commit": "${{ github.sha }}"
           }
           EOF
+
+          if [ -f README.md ]; then
+            sed -i \
+              -e '/<!-- TEMPLATE_ONLY_START -->/,/<!-- TEMPLATE_ONLY_END -->/d' \
+              -e "s|{{REPO_NAME}}|$REPO_NAME|g" \
+              -e "s|{{REPO_FULL_NAME}}|$REPO_FULL_NAME|g" \
+              -e "s|{{REPO_CLONE_URL}}|$REPO_CLONE_URL|g" \
+              -e "s|{{DEPLOY_URL}}|$DOMAIN|g" \
+              README.md
+          fi
+
           git config user.email "github-actions[bot]@users.noreply.github.com"
           git config user.name "github-actions[bot]"
-          git add .coolify/app.json
-          git commit -m "chore: register Coolify app + DB UUIDs"
+          git add .coolify/app.json README.md
+          git commit -m "chore: bootstrap Coolify resources and personalize README"
           git push
