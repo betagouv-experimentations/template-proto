@@ -17,16 +17,13 @@ if ! command -v gh &>/dev/null; then
   sudo apt-get update && sudo apt-get install -y gh
 fi
 
-# Outils accessibilité
-npm install -g pa11y
+# Playwright browsers (chromium + dépendances système via apt — sudo).
+# pa11y et drizzle-kit ne sont pas installés en global : on passe par
+# `npx pa11y ...` à la demande, et drizzle-kit est déjà dans les
+# devDependencies du projet.
+sudo npx --yes playwright install --with-deps chromium
 
-# Playwright browsers
-npx playwright install --with-deps chromium
-
-# Drizzle Kit (global pour usage CLI)
-npm install -g drizzle-kit
-
-# Spec Kit (pour initialisation de projets futurs)
+# Spec Kit (pour initialisation de projets futurs, optionnel)
 pip install --user specify-cli 2>/dev/null || true
 
 echo "=== Outils beta.gouv installés ==="
