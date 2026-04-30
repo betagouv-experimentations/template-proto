@@ -46,10 +46,20 @@ Sauvegarde le travail et déploie en production.
    ✅ Sauvegardé. Le déploiement Coolify a démarré, je surveille...
    ```
 
-   Poll le proxy de logs toutes les 10 secondes, max 5 minutes :
+   Poll le proxy de logs toutes les 10 secondes, max 5 minutes.
+
+   Le proxy exige une authentification GitHub : passe le PAT via
+   l'header `Authorization`. Le token vient de `gh auth token` (déjà
+   configuré dans agent-vm).
+
    ```bash
-   curl -sf "https://coolify-logs.proto-beta.fr/logs/$REPO/$SHA"
+   curl -sf -H "Authorization: Bearer $(gh auth token)" \
+     "https://coolify-logs.proto-beta.fr/logs/$REPO/$SHA"
    ```
+
+   Si tu reçois un 401/403 : c'est probablement que le PM n'est pas
+   (encore) membre de l'org `betagouv-experimentations`. Indique-le
+   explicitement et propose-lui de contacter son coach beta.
 
    Selon le `status` retourné :
 
@@ -72,10 +82,16 @@ Sauvegarde le travail et déploie en production.
      Récupère les logs (champ `logs` de la réponse JSON), analyse les
      dernières lignes pour identifier la cause. Cas typiques :
      - Erreur TypeScript → propose un /change pour corriger
-     - Migration Drizzle non appliquée → propose un /change pour
-       régénérer + commit
+     - Migration Drizzle qui plante → propose un /change pour
+       régénérer la migration
      - Manque d'une variable d'env → liste celles attendues vs
        celles présentes dans Coolify
+     - Build OK mais l'app crashe au démarrage → fetch les logs
+       runtime (les logs build n'ont rien d'utile dans ce cas) :
+       ```bash
+       curl -sf -H "Authorization: Bearer $(gh auth token)" \
+         "https://coolify-logs.proto-beta.fr/runtime-logs/$REPO?lines=200"
+       ```
      - Hors de tes compétences → affiche au PM :
 
        ```
