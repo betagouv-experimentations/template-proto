@@ -1,28 +1,34 @@
 Le PM décrit ce qu'il veut construire. Suis ce workflow en séquence.
 
-## Phase 1 — Comprendre
+## Phase 1 — Vérifier le cadrage
 
-Pose uniquement les questions CRITIQUES. Maximum 3 questions.
-Exemples de bonnes questions :
-- "Qui sont les utilisateurs de cet outil ?"
-- "Quelles sont les 3 actions principales qu'ils doivent pouvoir faire ?"
-- "Y a-t-il des données sensibles ou personnelles à gérer ?"
+Vérifie si `specs/SPEC.md` existe :
 
-Si le besoin est déjà clair et précis, passe directement à la phase 2.
+- **Si `specs/SPEC.md` n'existe pas** :
+  Affiche exactement ce message, puis STOP (pas de questions, pas de
+  fichiers générés) :
 
-## Phase 2 — Spécifier
+  "Avant /build, on cadre le produit. Tape /cadrer — un dialogue
+  d'environ 20 minutes (persona, problème, promesse, parcours, données,
+  succès) qui produit specs/SPEC.md + specs/BACKLOG.md. Reviens ensuite
+  sur /build."
 
-Génère une spec concise dans `specs/spec.md`. La spec doit contenir :
-- Description du projet (2-3 phrases)
-- Liste des écrans principaux
-- Modèle de données (entités et relations)
-- Parcours utilisateur prioritaire
+- **Si `specs/SPEC.md` existe** :
+  Lis `specs/SPEC.md` et `specs/BACKLOG.md`. Passe directement en
+  Phase 2.
 
-Montre au PM un **résumé en 10-15 lignes max** (pas le fichier entier).
+## Phase 2 — Valider la spec
+
+Tu as déjà `specs/SPEC.md` et `specs/BACKLOG.md` produits par `/cadrer`.
+Présente au PM un **résumé en 10-15 lignes max** qui couvre : persona
+principal, parcours en 3-5 étapes, données clés, et les 3-5 premiers
+tickets du backlog.
+
 Demande : "Ça correspond à ce que tu veux ? Si oui je lance la
-construction. Sinon dis-moi ce qu'il faut changer."
+construction. Sinon, dis-moi ce qu'il faut changer dans specs/SPEC.md
+ou specs/BACKLOG.md."
 
-ATTENDS la validation du PM avant de continuer.
+ATTENDS la validation explicite du PM avant de continuer.
 
 ## Phase 3 — Construire
 
@@ -38,13 +44,17 @@ Enchaîne SANS interruption :
    npx drizzle-kit migrate
    ```
 
-3. **Implémenter écran par écran** :
-   Pour chaque écran du plan :
-   a. Crée la page dans `src/app/`
-   b. Crée les composants nécessaires dans `src/components/`
-   c. Crée les API routes dans `src/app/api/` si nécessaire
-   d. Utilise UNIQUEMENT les composants `@codegouvfr/react-dsfr`
-   e. Écris un test E2E dans `tests/` pour le parcours de cet écran
+3. **Implémenter les tickets de `specs/BACKLOG.md` dans l'ordre** :
+   Pour chaque ticket (du haut vers le bas du backlog) :
+   a. Lis le ticket et son critère d'acceptation
+   b. Implémente la page/composant/API correspondant dans `src/`
+   c. Utilise UNIQUEMENT les composants `@codegouvfr/react-dsfr`
+   d. Écris un test E2E Playwright qui couvre ce ticket
+   e. Coche le ticket dans `specs/BACKLOG.md` (`[ ]` devient `[x]`)
+   f. Passe au ticket suivant
+
+   Ne pas sauter de ticket sans validation explicite du PM. Si un
+   ticket bloque, demande-lui.
 
 4. **Seed data** : Écris des données de test réalistes dans
    `scripts/seed.ts` et exécute `npm run seed`

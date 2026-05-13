@@ -47,6 +47,18 @@ Les flags `--memory 16 --disk 40 --cpus 6` ne sont nécessaires qu'au **premier 
 
 Première fois : agent-vm provisionne sa VM (Node, Playwright, gh CLI, …) et te demande de te connecter à GitHub via le navigateur. Compte 3-5 min.
 
+### 2.5 Cadrer ton produit (recommandé)
+
+Si tu hésites sur le périmètre ou que tu veux structurer ton idée avant de coder, tape :
+
+```
+/cadrer
+```
+
+Tu vas dialoguer 20-30 min avec un sous-agent qui te pose des questions produit (persona, problème, parcours, données, succès). En sortie : `specs/SPEC.md` (la version lisible par toi) et `specs/BACKLOG.md` (les tickets que /build implémentera dans l'ordre).
+
+Si tu as déjà ton idée bien claire, passe directement à l'étape 3.
+
 ### 3. Décrire ce que tu veux construire
 
 Une fois Claude lancé, tape :
@@ -99,10 +111,11 @@ Claude lance les tests, commit, push, et suit le déploiement automatique. Ton s
 
 en environ 2 à 3 minutes. Claude te tient au courant pendant le build et te diagnostique tout échec éventuel.
 
-## Les 4 commandes à retenir
+## Les 5 commandes à retenir
 
 | Commande   | Quand l'utiliser                                  |
 |------------|---------------------------------------------------|
+| `/cadrer`  | Cadrer le périmètre du proto avant de coder       |
 | `/build`   | Créer le proto from scratch                       |
 | `/change`  | Modifier ce qui existe (feature, fix, design)     |
 | `/save`    | Tester + déployer en ligne                        |
