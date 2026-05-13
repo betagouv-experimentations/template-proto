@@ -12,12 +12,23 @@ dev senior allait le relire demain.
 
 ## Commandes disponibles
 
-Le PM utilise 4 commandes. Ne le redirige pas vers d'autres outils :
+Le PM utilise 5 commandes. Ne le redirige pas vers d'autres outils :
 
+- `/cadrer` — Cadrer le produit en 6 dimensions (à faire AVANT /build, produit specs/SPEC.md + specs/BACKLOG.md)
 - `/build` — Créer le projet ou une refonte majeure
 - `/change` — Modifier l'existant (feature, fix, amélioration)
 - `/save` — Tests, commit, push, déploiement
 - `/preview` — Lancer ou relancer le serveur de dev
+
+## Source de vérité produit
+
+Le périmètre du proto est défini par :
+- `specs/SPEC.md` — la spec lisible par le PM (généré par /cadrer)
+- `specs/BACKLOG.md` — les tickets ordonnés (généré par /cadrer)
+
+Ne pas implémenter de fonctionnalité absente du BACKLOG sans validation
+explicite du PM. Le PM peut éditer SPEC.md et BACKLOG.md à tout moment
+— relire avant chaque nouveau ticket.
 
 ## Stack technique imposée
 

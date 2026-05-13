@@ -1,7 +1,8 @@
-# Aide-mémoire — Les 4 commandes
+# Aide-mémoire — Les 5 commandes
 
 | Commande   | Quand l'utiliser                              |
 |------------|-----------------------------------------------|
+| `/cadrer`  | Cadrer le produit avant /build (20 min)       |
 | `/build`   | Créer le proto from scratch                   |
 | `/change`  | Modifier ce qui existe (feature, fix, design) |
 | `/save`    | Mettre en ligne (tests + commit + deploy)     |
@@ -10,11 +11,12 @@
 ## Workflow type
 
 ```
+/cadrer         → 6 questions produit → specs/SPEC.md + specs/BACKLOG.md
 /build          → décris ton idée → proto créé
 /change         → "ajoute un champ secteur" → modifié
 /preview        → vérifie sur http://localhost:3000
 /change         → "change le titre en 'Mes partenaires'" → modifié
-/save           → en ligne sur https://[repo].experimentations.beta.gouv.fr
+/save           → en ligne sur https://[repo].proto-beta.fr
 ```
 
 ## Bons réflexes
